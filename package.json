@@ -1,0 +1,20 @@
+{
+  "name": "devcamper",
+  "version": "1.0.0",
+  "description": "Backend API for coding bootcamps",
+  "main": "server.js",
+  "scripts": {
+   "start": "NODE_ENV=production node server",
+   "dev": "nodemon server"
+  },
+  "keywords": [],
+  "author": "Rod Bennett",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
