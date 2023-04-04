@@ -1,4 +1,4 @@
 node_modules
-package_lock.json
+package-lock.json
 config/config.env
 .DS_Store

@@ -4,15 +4,20 @@
   "description": "Backend API for coding bootcamps",
   "main": "server.js",
   "scripts": {
-   "start": "NODE_ENV=production node server",
-   "dev": "nodemon server"
+    "start": "NODE_ENV=production node server",
+    "dev": "nodemon server"
   },
   "keywords": [],
   "author": "Rod Bennett",
   "license": "MIT",
   "dependencies": {
+    "colors": "^1.4.0",
     "dotenv": "^16.0.3",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "mongoose": "^7.0.3",
+    "morgan": "^1.10.0",
+    "node-geocoder": "^4.2.0",
+    "slugify": "^1.6.6"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
