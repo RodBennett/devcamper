@@ -102,7 +102,7 @@ exports.bootcampUploadPhoto = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse(`Please upload a photo`, 400))
   }
   // this console returns an entire file object with many properties you can use to create standards for photos such as size and filetype 
-  console.log(req.files.file)
+  // console.log(req.files.file)
   // Make sure file is a photo - check by mime type
   if (!file.mimetype.startsWith("image")) {
     return next(new ErrorResponse("Please upload an image file"))
@@ -114,27 +114,22 @@ exports.bootcampUploadPhoto = asyncHandler(async (req, res, next) => {
 
   // Create custom filename so many users can use photos named "bootcamp.jpeg", etc.
   file.name = `photo_${bootcamp._id}${path.parse(file.name).ext}`
-
   file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async err => {
     if (err) {
       console.log(err)
       return next(new ErrorResponse(`Problem with file upload`, 500))
-
     }
+
     await Bootcamp.findByIdAndUpdate(req.params.id, { photo: file.name })
     res.status(200).json({ success: true, data: file.name})
   });
-
-
 });
-
-
 
 // @desc        Get bootcamp within radius by miles
 // @route       GET /api/v1/bootcamps/radius/:zipcode/:distance
 // @access      Private (requires auth token)
 
-// see mongoDB docs on geosptaila querying here: https://www.mongodb.com/docs/manual/reference/operator/query-geospatial/
+// see mongoDB docs on geospatial querying here: https://www.mongodb.com/docs/manual/reference/operator/query-geospatial/
 
 exports.getBootcampsInRadius = asyncHandler(async (req, res, next) => {
   // this line pulls zipcode and distance out of url
