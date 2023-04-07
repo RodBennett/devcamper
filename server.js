@@ -1,7 +1,9 @@
+const path = require("path")
 const express = require("express");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db")
 const colors = require("colors")
+const fileupload = require("express-fileupload")
 const errorHandler = require("./middleware/error")
 
 // morgan is middleware npm
@@ -21,11 +23,15 @@ const app = express();
 // body parser middleware to read json
 app.use(express.json());
 
-
 // Dev logger using morgan middleware logger ... (app.use() indicates middleware)
 if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
 }
+
+app.use(fileupload());
+
+// Set static folder
+app.use(express.static(path.join(__dirname, "public")))
 
 // mount routers
 app.use("/api/v1/bootcamps", bootcamps)
@@ -36,8 +42,6 @@ app.use(errorHandler)
 // middleware to handle ansynchronous code in our controllers
 
 const PORT = process.env.PORT || 5001;
-
-
 
 const server = app.listen(PORT,
     console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold)

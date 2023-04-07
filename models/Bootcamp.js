@@ -131,8 +131,8 @@ BootcampSchema.pre("save", async function (next) {
 });
 
 // Cascade delete courses when bootcamp is deleted
-BootcampSchema.pre("remove", async function (next) {
-    console.log(`Courses removed from bootcamp ${this._id}`)
+BootcampSchema.pre("deleteOne", async function (next) {
+    // console.log(`Courses removed from bootcamp ${this._id}`)
     // this.model refers to Course, and deleteMany's params take in the bootcamp field from the Course model
     await this.model("Course").deleteMany({ bootcamp: this._id }) // bootcamp: this._id is Course model bootcamp field
     next();
@@ -145,7 +145,5 @@ BootcampSchema.virtual("courses", {
     foreignField: "bootcamp",
     justOne: false
 });
-
-
 
 module.exports = mongoose.model("Bootcamp", BootcampSchema)

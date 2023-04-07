@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-
 const CourseSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -10,7 +9,7 @@ const CourseSchema = new mongoose.Schema({
     },
     description: {
         type: String,
-        required: [true, "Please add a descritpion"],
+        required: [true, "Please add a description"],
         maxlength: [500, "Description cannot be moe than 500 chracters"],
     },
     weeks: {
@@ -40,5 +39,36 @@ const CourseSchema = new mongoose.Schema({
         required: true
     }
 });
+
+// Static method to get avg of course tutiions.  Satic methods are called directly on the model, not on the controller
+CourseSchema.statics.getAverageCost = async function (bootcampId) {
+    const obj = await this.aggregate([
+        {
+            $match: { bootcamp: bootcampId }
+        },
+        {
+            $group: {
+                _id: "$bootcamp",
+                averageCost: { $avg: "$tuition" }
+            }
+        }
+    ])
+    try {
+        await this.model("Bootcamp").findByIdAndUpdate(bootcampId, {
+            averageCost: Math.ceil(obj[0].averageCost / 10) * 10
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+// Call getAverage cost after save
+CourseSchema.post("save", function () {
+    this.constructor.getAverageCost(this.bootcamp)
+})
+
+// Call getAverage cost before remove
+CourseSchema.pre("deleteOne", function () {
+    this.constructor.getAverageCost(this.bootcamp)
+})
 
 module.exports = mongoose.model("Course", CourseSchema);

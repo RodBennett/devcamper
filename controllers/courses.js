@@ -3,7 +3,6 @@ const Bootcamp = require("../models/Bootcamp")
 const ErrorResponse = require("../utils/errorResponse");
 const asyncHandler = require("../middleware/asyncHandler");
 
-const mongoose = require("mongoose");
 
 
 // @desc        Get all courses
@@ -11,28 +10,17 @@ const mongoose = require("mongoose");
 // @route       GET /api/v1/bootcamps/:bootcampId/courses
 // @access      Public
 exports.getCourses = asyncHandler(async (req, res, next) => {
-    let query;
-
-    // req.params.bootcampId invokes the url params /:bootcampId 
     if (req.params.bootcampId) {
+        const courses = await Course.find({ bootcamp: req.params.bootcampId })
 
-        // here the query links bootcamp field in Course model to bootcampId in the url params
-        query = Course.find({ bootcamp: req.params.bootcampId })
-    } else {
-        // populate pulls data from "bootcamp" field in Course model
-        query = Course.find().populate({
-            path: "bootcamp", // path identifies whole field in Course model
-            select: "name description location.city" // select operator in mongoose uses spaces
+        res.status(200).json({
+            success: true,
+            count: courses.length,
+            data: courses
         })
-        // the same can be accomplished with:
-        // query = Course.find().populate("bootcamp", "name description location.city")
+    } else {
+        res.status(200).json(res.advancedResults)
     }
-    const courses = await query
-    res.status(200).json({
-        success: true,
-        count: courses.length,
-        data: courses
-    })
 });
 
 // @desc        Get single course
