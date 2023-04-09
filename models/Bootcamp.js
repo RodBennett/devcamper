@@ -31,6 +31,7 @@ const BootcampSchema = new mongoose.Schema({
     },
     email: {
         type: String,
+        required: [true, "Please add an email"],
         unique: true,
         match: [/[a-z0-9.]{1,64}@[a-z0-9.]{1,64}/i, "Please add a valid email"],
     },

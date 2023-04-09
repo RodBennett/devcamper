@@ -4,9 +4,7 @@ const ErrorResponse = require("../utils/errorResponse");
 function errorHandler(err, req, res, next) {
     let error = { ...err };
     error.message = err.message;
-    // console.log(err) - by consoling the err, you can see the entire err object with name, message, value, valueType properties, etc
-
-    // console.log(err);
+    // console.log(err) // by consoling the err, you can see the entire err object with name, message, value, valueType properties, etc
 
     // Mongoose check for bad ObjectId
     if (err.name === "CastError") {
@@ -22,6 +20,7 @@ function errorHandler(err, req, res, next) {
         error = new ErrorResponse(message, 400);
     } else if (err.name === "ValidationError") {
         const message = Object.values(err.errors).map((val) => val.message)
+        // console.log("THIS IS MESSAGE", message)
         error = new ErrorResponse(message, 400)
 
         // if (!req.body.name) {

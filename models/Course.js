@@ -40,7 +40,7 @@ const CourseSchema = new mongoose.Schema({
     }
 });
 
-// Static method to get avg of course tutiions.  Satic methods are called directly on the model, not on the controller
+// Static used to get avg of course tuitions.  Satic methods are called directly on the model, not on the controller
 CourseSchema.statics.getAverageCost = async function (bootcampId) {
     const obj = await this.aggregate([
         {

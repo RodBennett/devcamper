@@ -34,7 +34,7 @@ exports.getBootcamp = asyncHandler(async (req, res, next) => {
 
 // @desc        Create new bootcamp
 // @route       POST /api/v1/bootcamps
-// @access      Private (requires auth token)
+// @access      Private (requires auth )
 exports.createBootcamp = asyncHandler(async (req, res, next) => {
   // can console body to get the added object with all fields from model in it
   // console.log(req.body)
@@ -121,7 +121,7 @@ exports.bootcampUploadPhoto = asyncHandler(async (req, res, next) => {
     }
 
     await Bootcamp.findByIdAndUpdate(req.params.id, { photo: file.name })
-    res.status(200).json({ success: true, data: file.name})
+    res.status(200).json({ success: true, data: file.name })
   });
 });
 

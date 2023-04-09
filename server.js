@@ -5,7 +5,7 @@ const connectDB = require("./config/db")
 const colors = require("colors")
 const fileupload = require("express-fileupload")
 const errorHandler = require("./middleware/error")
-
+const cookieParser = require("cookie-parser")
 // morgan is middleware npm
 const morgan = require("morgan");
 
@@ -23,6 +23,7 @@ const app = express();
 
 // body parser middleware to read json
 app.use(express.json());
+app.use(cookieParser())
 
 // Dev logger using morgan middleware logger ... (app.use() indicates middleware)
 if (process.env.NODE_ENV === "development") {
