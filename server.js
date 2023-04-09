@@ -21,7 +21,7 @@ const auth = require("./routes/auth")
 
 const app = express();
 
-// body parser middleware to read json
+// body parser/ coookie parser middleware to read json
 app.use(express.json());
 app.use(cookieParser())
 

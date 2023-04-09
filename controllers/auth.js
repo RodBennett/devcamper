@@ -21,7 +21,6 @@ exports.register = asyncHandler(async (req, res, next) => {
 
     // Create token, sign token  ... you can test token at https://jwt.io/
     sendResponseToken(user, 200, res)
-
 });
 
 // @desc        Login user
@@ -51,8 +50,7 @@ exports.login = asyncHandler(async (req, res, next) => {
     }
     // send token for each login
     sendResponseToken(user, 200, res)
-
-})
+});
 
 // create cookie and send response 
 const sendResponseToken = (user, statusCode, res) => {
@@ -64,12 +62,25 @@ const sendResponseToken = (user, statusCode, res) => {
         expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
         httpOnly: true
     }
-
+    // set conditional for production
     if (process.env.NODE_ENV === "production") {
         options.secure = true
     }
+    // response
     res
         .status(statusCode)
         .cookie("token", token, options)
         .json({ success: true, token })
-}
+};
+
+// @desc        Get current logged in user
+// @route       GET /api/v1/auth/me
+// @access      Private
+exports.getMe = asyncHandler(async (req, res, next) => {
+    // req.user is always the variable for loggedin user
+    const user = await User.findById(req.user.id);
+
+    res.status(200).json({ success: true, data: user })
+    next();
+})
+

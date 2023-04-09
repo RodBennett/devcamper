@@ -12,6 +12,7 @@ const {
 } = require("../controllers/bootcamps");
 
 const Bootcamp = require("../models/Bootcamp")
+const { protect } = require("../middleware/auth")
 // advanced results middleware
 const advancedResults = require("../middleware/advancedResults")
 
@@ -25,12 +26,14 @@ router.use("/:bootcampId/courses", courseRouter)
 
 // "courses" is the populate parameter in advancedSearch function
 router.route("/").get(advancedResults(Bootcamp, "courses"), getBootcamps)
-    .post(createBootcamp);
+    .post(protect, createBootcamp);
 
-router.route("/:id").get(getBootcamp).put(updateBootcamp).delete(deleteBootcamp)
+router.route("/:id").get(getBootcamp).put(protect, updateBootcamp).delete(protect, deleteBootcamp)
 
 router.route("/radius/:zipcode/:distance").get(getBootcampsInRadius)
 
-router.route("/:id/photo").put(bootcampUploadPhoto)
+router.route("/:id/photo").put(protect, bootcampUploadPhoto)
+
+
 
 module.exports = router;
