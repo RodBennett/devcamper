@@ -37,7 +37,13 @@ const CourseSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: "Bootcamp",
         required: true
+    },
+    user: {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+        required: true
     }
+
 });
 
 // Static used to get avg of course tuitions.  Satic methods are called directly on the model, not on the controller

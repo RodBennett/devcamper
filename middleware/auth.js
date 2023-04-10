@@ -35,3 +35,19 @@ exports.protect = asyncHandler(async (req, res, next) => {
 
 // export "protect" function to bootcamp and course routes
 // set up me auth/me route to get req.user in auth routes
+
+// ROLE AUTHORIZATION
+
+// create export function for auhthorization by role.
+exports.auth = (...roles) => {
+    return (req, res, next) => {
+        
+        if (!roles.includes(req.user.role)) {
+            return next(new ErrorResponse(`User role ${req.user.role} is not authorized to access this route`, 403))
+        }
+        next();
+    }
+}
+// check if req.user includes publisher role
+// add authorize to auth routes
+// test in postman to see if user and publisher ahve different results

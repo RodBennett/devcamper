@@ -36,8 +36,19 @@ exports.getBootcamp = asyncHandler(async (req, res, next) => {
 // @route       POST /api/v1/bootcamps
 // @access      Private (requires auth )
 exports.createBootcamp = asyncHandler(async (req, res, next) => {
-  // can console body to get the added object with all fields from model in it
+  // can console req.body to get the added object with all fields from model in it
   // console.log(req.body)
+
+  // Add user to req.body...req.body.user refers to 'user' in the Bootcamp model
+  req.body.user = req.user.id
+
+  // Check for preexisting published bootcamps (publishers can only have 1)
+  const publishedBootcamp = await Bootcamp.findOne({ user: req.user.id })
+
+  // If user is not admin, can only add one bootcamp
+  if (publishedBootcamp && req.user.role !== "admin") {
+    return next(new ErrorResponse(`User ${req.user.id} already has a published bootcamp`, 400))
+  }
 
   const bootcamp = await Bootcamp.create(req.body);
 
@@ -53,16 +64,26 @@ exports.createBootcamp = asyncHandler(async (req, res, next) => {
 // @route       PUT /api/v1/bootcamps/:id
 // @access      Private (requires auth token)
 exports.updateBootcamp = asyncHandler(async (req, res, next) => {
-  const bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
+  let bootcamp = await Bootcamp.findById(req.params.id)
 
+    // make sure bootcamp exists
   if (!bootcamp) {
     return next(
       new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
     );
   }
+
+  // make sure user is bootcamp owner.  If you don't use toString, the entire objectId will be returned
+  if (bootcamp.user.toString() !== req.user.id && req.user.role !== "admin") {
+    return next(
+      new ErrorResponse(`User ${req.user.id} is not authorized to update this bootcamp`, 401)
+    );
+  }
+
+  bootcamp = await Bootcamp.findOneAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
 
   res.status(200).json({ success: true, data: bootcamp });
 });
@@ -71,12 +92,24 @@ exports.updateBootcamp = asyncHandler(async (req, res, next) => {
 // @route       DELETE /api/v1/bootcamps/:id
 // @access      Private (requires auth token)
 exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
-  const bootcamp = await Bootcamp.findById(req.params.id)
+  let bootcamp = await Bootcamp.findById(req.params.id)
   if (!bootcamp) {
     return next(
       new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
     );
   }
+
+  if (bootcamp.user.toString() !== req.user.id && req.user.role !== "admin") {
+    return next(
+      new ErrorResponse(`User ${req.user.id} is not authorized to delete this bootcamp`, 401)
+    );
+  }
+
+  bootcamp = await Bootcamp.findOneAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
 
   await Course.deleteMany({ bootcamp: bootcamp._id })
 
@@ -93,6 +126,12 @@ exports.bootcampUploadPhoto = asyncHandler(async (req, res, next) => {
   if (!bootcamp) {
     return next(
       new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
+    );
+  }
+  // make sure user is bootcamp owner.  If you don't use toString, the entire objectId will be returned
+  if (bootcamp.user.toString() !== req.user.id && req.user.role !== "admin") {
+    return next(
+      new ErrorResponse(`User ${req.user.id} is not authorized to update this bootcamp`, 401)
     );
   }
 
