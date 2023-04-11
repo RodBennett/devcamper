@@ -52,6 +52,38 @@ exports.login = asyncHandler(async (req, res, next) => {
     sendResponseToken(user, 200, res)
 });
 
+// @desc        Get loggedin user
+// @route       GET /api/v1/auth/me
+// @access      Private
+exports.getMe = asyncHandler(async (req, res, next) => {
+    // req.user is always the variable for loggedin user
+    const user = await User.findById(req.user.id);
+
+    res.status(200).json({ success: true, data: user })
+    next();
+});
+
+// @desc        Forgot Password
+// @route       GET /api/v1/auth/forgotpassword
+// @access      Public
+exports.forgotPassword = asyncHandler(async (req, res, next) => {
+    // req.user is always the variable for loggedin user
+    const user = await User.findOne({ email: req.body.email });
+
+    if (!user) {
+        return next(new ErrorResponse("No user with that email", 404))
+    }
+    // getResetPasswordToken from User model 
+    const resetToken = user.getResetPasswordToken();
+
+    // save token to database
+    await user.save({ validateBeforeSave: false })
+
+    res.status(200).json({ success: true, data: user })
+    next();
+});
+
+
 // create cookie and send response 
 const sendResponseToken = (user, statusCode, res) => {
     // get token from model
@@ -73,14 +105,4 @@ const sendResponseToken = (user, statusCode, res) => {
         .json({ success: true, token })
 };
 
-// @desc        Get current logged in user
-// @route       GET /api/v1/auth/me
-// @access      Private
-exports.getMe = asyncHandler(async (req, res, next) => {
-    // req.user is always the variable for loggedin user
-    const user = await User.findById(req.user.id);
-
-    res.status(200).json({ success: true, data: user })
-    next();
-})
 

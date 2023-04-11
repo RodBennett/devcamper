@@ -49,10 +49,11 @@ exports.getCourse = asyncHandler(async (req, res, next) => {
 exports.createCourse = asyncHandler(async (req, res, next) => {
     // req.body.bootcamp calls the field "bootcamp" in Course model, and links it to bootcampId in the url params
     req.body.bootcamp = req.params.bootcampId
+    // Add req.user to course when it is created and must match req.user of the bootcamp
     req.body.user = req.user.id;
 
     // bootcamp variable matches bootcampId extracted from Course model and pulls up that bootcamp
-    const bootcamp = await Bootcamp.findById(req.params.bootcampId);
+    const bootcamp = await Bootcamp.findById(req.params.bootcampId); // bootcamp is url param
 
     if (!bootcamp) {
         return next(
@@ -113,7 +114,7 @@ exports.deleteCourse = asyncHandler(async (req, res, next) => {
 
     if (course.user.toString() !== req.user.id && req.user.role !== "admin") {
         return next(
-            new ErrorResponse(`User ${req.user.id} is not authorized to update this course`, 401)
+            new ErrorResponse(`User ${req.user.id} is not authorized to delete this course`, 401)
         );
     }
 
