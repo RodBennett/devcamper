@@ -1,8 +1,8 @@
+// crypto is core Node module
+const crypto = require("crypto")
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-// crypto is core node module
-const crypto = require("crypto")
 
 const UserSchema = new mongoose.Schema({
     name: {
@@ -38,8 +38,9 @@ const UserSchema = new mongoose.Schema({
     },
 });
 
-// Encrypt password
+// Encrypt password middleware
 UserSchema.pre("save", async function (next) {
+    // if password is not modifed via forgotpassword route, move on
     if (!this.isModified("password")) {
         next();
     }
@@ -61,21 +62,21 @@ UserSchema.methods.matchPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password)
 };
 
+// create reset password token
 UserSchema.methods.getResetPasswordToken = function () {
-    // create reset password token
-    const resetToken = crypto.randomBytes(10).toString("hex")
+    //generate token
+    const resetToken = crypto.randomBytes(20).toString("hex");
 
-    // hash the token and set it to reset password reset token field
+    // hash the token and set it to resetPasswordToken field in model- see node crypto documentation for below
     this.resetPasswordToken = crypto
         .createHash("sha256")
         .update(resetToken)
-        .digest("hex")
+        .digest("hex");
 
     // set password expire for 10 minutes
-    this.resetPasswordExpire = Date.now() + 10 * 60 * 1000
+    this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
 
-    return resetToken;
+    return resetToken
 }
-
 // Match user entered password with hashed password in db
 module.exports = mongoose.model("User", UserSchema);

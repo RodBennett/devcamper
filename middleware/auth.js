@@ -5,13 +5,14 @@ const asyncHandler = require("./asyncHandler");
 const User = require("../models/User");
 
 
-// Protect routes function with async
+// Protect routes function with async which pertains to all routes where login is necessary
 exports.protect = asyncHandler(async (req, res, next) => {
     // initialize token variable
     let token;
 
     // check for authorization header
     if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+
         // split method treats Bearer and token as an array [Bearer, token] so [1] is index of token
         token = req.headers.authorization.split(" ")[1]
     }
@@ -24,7 +25,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         console.log(decoded)
 
-        // extract id from payload ... req.user will always be logged in user from now on
+        // extract id from payload ... req.user will be logged in user from now on
         // we use "id" instead of "_id" from model becasue this is from jwt library
         req.user = await User.findById(decoded.id);
         next();
@@ -50,4 +51,4 @@ exports.auth = (...roles) => {
 }
 // check if req.user includes publisher role
 // add authorize to auth routes
-// test in postman to see if user and publisher ahve different results
+// test in postman to see if user and publisher have different results
