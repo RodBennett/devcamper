@@ -110,7 +110,6 @@ exports.updatePassword = asyncHandler(async (req, res, next) => {
   sendResponseToken(user, 200, res)
 });
 
-
 // @desc        Forgot Password
 // @route       GET /api/v1/auth/forgotpassword
 // @access      Public
@@ -207,3 +206,6 @@ const sendResponseToken = (user, statusCode, res) => {
     .cookie("token", token, options)
     .json({ success: true, token });
 };
+
+
+

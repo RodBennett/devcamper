@@ -1,3 +1,4 @@
+
 const express = require("express");
 
 const {
@@ -7,7 +8,8 @@ const {
     forgotPassword,
     resetPassword,
     updateDetails,
-    updatePassword } = require("../controllers/auth")
+    updatePassword
+} = require("../controllers/auth")
 
 const router = express.Router();
 
