@@ -29,10 +29,13 @@ router.use("/:bootcampId/reviews", reviewRouter)
 // "courses" is the populate parameter in advancedSearch function
 router.route("/")
     .get(advancedResults(Bootcamp, "courses"), getBootcamps)
-    .get(advancedResults(Bootcamp, "reviews"), getBootcamps)
+    // .get(advancedResults(Bootcamp, "reviews"), getBootcamps)
     .post(protect, auth("publisher", "admin"), createBootcamp);
 
-router.route("/:id").get(getBootcamp).put(protect, updateBootcamp).delete(protect, deleteBootcamp)
+router.route("/:id")
+    .get(getBootcamp)
+    .put(protect, updateBootcamp)
+    .delete(protect, deleteBootcamp)
 
 router.route("/radius/:zipcode/:distance").get(getBootcampsInRadius)
 

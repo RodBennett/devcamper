@@ -74,8 +74,8 @@ const BootcampSchema = new mongoose.Schema({
     },
     averageRating: {
         type: Number,
-        min: [1, "Rating must be at least 1"],
-        max: [10, "Rating cannot be more than 10"]
+        // min: [1, "Rating must be at least 1"],
+        // max: [10, "Rating cannot be more than 10"]
     },
     averageCost: Number,
     photo: {
@@ -151,5 +151,13 @@ BootcampSchema.virtual("courses", {
     foreignField: "bootcamp",
     justOne: false
 });
+
+BootcampSchema.virtual("reviews", {
+    ref: "Review",
+    localField: "_id",
+    foreignField: "bootcamp",
+    justOne: false
+});
+
 
 module.exports = mongoose.model("Bootcamp", BootcampSchema)
