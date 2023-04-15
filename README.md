@@ -1,4 +1,4 @@
-# Devcamper API 👨‍💻
+# Devcamper API
 
 ## Overview 
 > Backend REST API for searching bootcamp database by bootcamps and courses. Includes functionality for authenticated users to add, update and delete bootcamps and courses, and for public users to add, update, and delete reviews.
@@ -21,7 +21,7 @@ Rename ```config/config.env.env``` to ```config/config.env``` and update the val
 - Slugify (to create url friendly fields in models)
 - Node-geocoder (for location and searching within radius)
 - colors (for terminal color fonts)
-- docgen
+
 
 ## NPM Run App
 ```
@@ -37,8 +37,11 @@ npm start
 
 
 ## Deployment
-- Postman Documentation link: (https://documenter.getpostman.com/view/26561902/2s93Xx1jRh)
+- Postman Documentation link: https://documenter.getpostman.com/view/26561902/2s93Xx1jRh
 - Digital Ocean Droplet
+
+## Credits
+Traversy Media's Node.js master course, 2019: https://www.traversymedia.com/
 
 ## Contributors
 Rod Bennett: rod.bennett75@gmail.com
